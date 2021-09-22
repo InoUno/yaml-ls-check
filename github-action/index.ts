@@ -19,7 +19,7 @@ async function run() {
     const results = await validateDirectory(rootPath, schemaMapping);
 
     if (results && results.length > 0) {
-        core.setFailed(`Error: ${results?.length} files failed validation`);
+        core.setFailed(`${results.length} file(s) failed validation`);
         core.setOutput(
             'invalidFiles',
             results.map((result) => result.filePath),
