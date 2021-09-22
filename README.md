@@ -31,7 +31,7 @@ If you have a `.vscode/settings.json` in the root of your repository directory, 
 ```yaml
 steps:
 - uses: actions/checkout@v2
-- uses: InoUno/yaml-ls-check@v1.0.0
+- uses: InoUno/yaml-ls-check@develop
 ```
 
 Additional settings for it are:
@@ -43,7 +43,7 @@ Additional settings for it are:
 ```yaml
 steps:
 - uses: actions/checkout@v2
-- uses: InoUno/yaml-ls-check@v1.0.0
+- uses: InoUno/yaml-ls-check@develop
   with:
     root: data
     schemaMapping: |
