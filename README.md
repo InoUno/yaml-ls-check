@@ -1,8 +1,9 @@
-# YAML schema validator
+# yaml-ls-check [![CI](https://github.com/InoUno/yaml-ls-check/actions/workflows/main.yml/badge.svg)](https://github.com/InoUno/yaml-ls-check/actions/workflows/main.yml) [![npm version](https://badge.fury.io/js/yaml-ls-check.svg)](https://badge.fury.io/js/yaml-ls-check)
 
 Provides an easy way to validate YAML files against given schemas utilizing the [yaml-language-server](https://github.com/redhat-developer/yaml-language-server) project.
 
 This package contains a CLI, a GitHub action, and the library itself.
+
 
 ## CLI
 
