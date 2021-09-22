@@ -18,10 +18,13 @@ async function run() {
 
     const results = await validateDirectory(rootPath, schemaMapping);
 
-    core.setOutput(
-        'invalidFiles',
-        results?.map((result) => result.filePath),
-    );
+    if (results && results.length > 0) {
+        core.setFailed(`Error: ${results?.length} files failed validation`);
+        core.setOutput(
+            'invalidFiles',
+            results.map((result) => result.filePath),
+        );
+    }
 }
 
 try {
