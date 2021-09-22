@@ -9,10 +9,10 @@ This package contains a CLI, a GitHub action, and the library itself.
 Install the CLI via npm:
 
 ```bash
-npm install --global yaml-schema-validator
+npm install --global yaml-ls-check
 ```
 
-The CLI should now be accessible as `yaml-schema-validator` or the short-hand `ysv`, and can be used to validate YAML files:
+The CLI should now be accessible as `yaml-ls-check` or the short-hand `ysv`, and can be used to validate YAML files:
 
 ```bash
 # Validate all YAML files in the given directory, using the .vscode/settings.json file in it, if present.
@@ -31,7 +31,7 @@ If you have a `.vscode/settings.json` in the root of your repository directory, 
 ```yaml
 steps:
 - uses: actions/checkout@v2
-- uses: InoUno/yaml-schema-validator@v1.0.0
+- uses: InoUno/yaml-ls-check@v1.0.0
 ```
 
 Additional settings for it are:
@@ -43,7 +43,7 @@ Additional settings for it are:
 ```yaml
 steps:
 - uses: actions/checkout@v2
-- uses: InoUno/yaml-schema-validator@v1.0.0
+- uses: InoUno/yaml-ls-check@v1.0.0
   with:
     root: data
     schemaMapping: |
@@ -56,12 +56,12 @@ steps:
 ## Library
 
 ```bash
-npm install yaml-schema-validator
+npm install yaml-ls-check
 ```
 
 
 ```ts
-import { validateDirectory } from 'yaml-schema-validator';
+import { validateDirectory } from 'yaml-ls-check';
 
 async function someFunction() {
     const invalidFiles = await validateDirectory('path/to/a/folder');
