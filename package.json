@@ -2,6 +2,17 @@
   "name": "yaml-ls-check",
   "version": "1.0.1",
   "description": "Library and tool used to validate YAML files against one or more schemas utilizing the yaml-language-server project.",
+  "license": "MIT",
+  "author": "InoUno <inoiown@gmail.com>",
+  "homepage": "https://github.com/InoUno/yaml-ls-check#readme",
+  "bugs": {
+    "url": "https://github.com/InoUno/yaml-ls-check/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/InoUno/yaml-ls-check.git"
+  },
+  "keywords": [ "yaml", "validate", "schema", "yaml-language-server", "vscode" ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
@@ -11,8 +22,6 @@
   "files": [
     "dist"
   ],
-  "author": "InoUno <inoiown@gmail.com>",
-  "license": "MIT",
   "scripts": {
     "start": "ts-node src/cli.ts",
     "clean": "rimraf dist",
