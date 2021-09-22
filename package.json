@@ -1,0 +1,49 @@
+{
+  "name": "yaml-ls-check",
+  "version": "1.0.0",
+  "description": "Library and tool used to validate YAML files against one or more schemas utilizing the yaml-language-server project.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "yaml-ls-check": "dist/cli.js",
+    "ylsc": "dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "author": "InoUno <inoiown@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "ts-node src/cli.ts",
+    "clean": "rimraf dist",
+    "build:lib": "tsc",
+    "build:action": "cd github-action && rimraf dist && webpack",
+    "build": "npm-run-all clean build:lib build:action",
+    "format": "prettier --write '**/*.ts'",
+    "lint": "prettier --check '**/*.ts'",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@actions/core": "^1.5.0",
+    "@types/glob": "^7.1.4",
+    "@types/jest": "^27.0.2",
+    "@types/node": "^16.9.4",
+    "jest": "^27.2.1",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.4.1",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^27.0.5",
+    "ts-loader": "^9.2.6",
+    "ts-node": "^10.2.1",
+    "typescript": "^4.4.3",
+    "umd-compat-loader": "^2.1.2",
+    "webpack": "^5.53.0",
+    "webpack-cli": "^4.8.0"
+  },
+  "dependencies": {
+    "commander": "^8.2.0",
+    "glob": "^7.1.7",
+    "vscode-uri": "^3.0.2",
+    "yaml-language-server": "^0.22.0"
+  }
+}

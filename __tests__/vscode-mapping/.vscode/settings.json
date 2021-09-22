@@ -1,0 +1,6 @@
+{
+    "yaml.schemas": {
+        "schema_with_name.json": [ "valid-name.yml" ],
+        "schema_with_count.json": [ "*-count.yml" ]
+    }
+}

@@ -1,0 +1,18 @@
+name: YAML schema validation
+description: Validates YAML files against specified schemas using the yaml-language-server
+inputs:
+  root:
+    description: Path to root directory that the validation should run from.
+    required: false
+  schemaMapping:
+    description: Mapping of schema to file patterns that should match the given schema. If present, the mapping found in .vscode/settings.json is ignored.
+    required: false
+outputs:
+  invalidFiles:
+    description: List of files which failed the validation.
+runs:
+  using: 'node12'
+  main: 'github-action/dist/index.js'
+branding:
+  color: green
+  icon: file-text
