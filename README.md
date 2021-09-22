@@ -12,16 +12,16 @@ Install the CLI via npm:
 npm install --global yaml-ls-check
 ```
 
-The CLI should now be accessible as `yaml-ls-check` or the short-hand `ysv`, and can be used to validate YAML files:
+The CLI should now be accessible as `yaml-ls-check` or the short-hand `ylsc`, and can be used to validate YAML files:
 
 ```bash
 # Validate all YAML files in the given directory, using the .vscode/settings.json file in it, if present.
-ysv <directory>
-ysv dir <directory>
+ylsc <directory>
+ylsc dir <directory>
 
 # Validate given YAML files against the given schema.
 # Schema can either be a local or remote one. File paths can be given as glob patterns.
-ysv schema <schema> <files...>
+ylsc schema <schema> <files...>
 ```
 
 ## GitHub Action
