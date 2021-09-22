@@ -1,4 +1,4 @@
-name: YAML schema validation
+name: YAML schema check
 description: Validates YAML files against specified schemas using the yaml-language-server
 inputs:
   root:
