@@ -9,17 +9,37 @@ import { TextDocument } from 'vscode-languageserver-textdocument';
 import { readJson } from './util';
 import { createSchemaRequestHandler } from './schema-handler';
 import { glob } from 'glob';
+import { TelemetryEvent } from 'yaml-language-server/lib/umd/languageserver/telemetry';
+import { YamlVersion } from 'yaml-language-server/lib/umd/languageservice/parser/yamlParser07';
+
+export class ConsoleTelemetry {
+    constructor() {}
+
+    send(event: TelemetryEvent): void {
+        console.error('send:', event);
+    }
+    sendError(name: string, properties: unknown): void {
+        console.error('sendError:', name, properties);
+    }
+    sendTrack(name: string, properties: unknown): void {
+        console.error('sendTrack:', name, properties);
+    }
+}
 
 export interface SchemaMapping {
     [uri: string]: string[] | string;
 }
 
-export interface SettingsWithRoot {
+export interface BaseSettings {
+    yamlVersion?: YamlVersion;
+}
+
+export interface SettingsWithRoot extends BaseSettings {
     rootDir: string;
     schemaMapping?: SchemaMapping;
 }
 
-export interface SettingsWithSchema {
+export interface SettingsWithSchema extends BaseSettings {
     schema: string;
 }
 
@@ -84,7 +104,13 @@ export async function getValidationResults(files: string[], settings?: Settings)
         schemaService.registerExternalSchema(uri, patterns);
     }
 
-    const yamlValidation = new YAMLValidation(schemaService);
+    const yamlValidation = new YAMLValidation(schemaService, new ConsoleTelemetry() as any);
+    yamlValidation.configure({
+        validate: true,
+        yamlVersion: settings?.yamlVersion ?? '1.2',
+        disableAdditionalProperties: false,
+        customTags: [],
+    });
 
     return await Promise.all(
         files.map(async (relativePath: string) => {
@@ -129,8 +155,8 @@ async function validateAndOutput(files: string[], settings: Settings) {
  * @param rootDir Path to root directory containing the YAML files to be validated.
  * @returns A list errors found in the files.
  */
-export async function validateDirectory(rootDir: string, schemaMapping?: SchemaMapping) {
-    console.log(`Looking for YAML files to validate at ${rootDir}`);
+export async function validateDirectory(settings: BaseSettings, rootDir: string, schemaMapping?: SchemaMapping) {
+    console.log(`Looking for YAML files to validate at: ${rootDir}`);
     const filePaths = await new Promise<string[]>((callback, error) => {
         glob('**/*.{yml,yaml}', { cwd: rootDir, silent: true, nodir: true }, (err, files) => {
             if (err) {
@@ -140,7 +166,7 @@ export async function validateDirectory(rootDir: string, schemaMapping?: SchemaM
         });
     });
 
-    return validateAndOutput(filePaths, { rootDir, schemaMapping });
+    return validateAndOutput(filePaths, { ...settings, rootDir, schemaMapping });
 }
 
 /**
@@ -149,7 +175,7 @@ export async function validateDirectory(rootDir: string, schemaMapping?: SchemaM
  * @param patterns List of glob patterns to files to validate with the given schema.
  * @returns A list errors found in the files.
  */
-export async function validateWithSchema(schema: string, ...patterns: string[]) {
+export async function validateWithSchema(settings: BaseSettings, schema: string, ...patterns: string[]) {
     const files = await Promise.all(
         patterns.map(
             (pattern) =>
@@ -164,5 +190,5 @@ export async function validateWithSchema(schema: string, ...patterns: string[]) 
         ),
     ).then((filesArrays) => filesArrays.flat());
 
-    return validateAndOutput(files, { schema });
+    return validateAndOutput(files, { ...settings, schema });
 }

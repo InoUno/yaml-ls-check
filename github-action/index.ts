@@ -1,5 +1,6 @@
 import * as core from '@actions/core';
 import * as path from 'path';
+import { YamlVersion } from 'yaml-language-server/lib/umd/languageservice/parser/yamlParser07';
 import { SchemaMapping, validateDirectory } from '../src';
 
 async function run() {
@@ -16,7 +17,12 @@ async function run() {
         console.log('Using schema mapping:', schemaMapping);
     }
 
-    const results = await validateDirectory(rootPath, schemaMapping);
+    let yamlVersion = core.getInput('yamlVersion') as YamlVersion;
+    if (yamlVersion) {
+        console.log('Using YAML specification version:', yamlVersion);
+    }
+
+    const results = await validateDirectory({ yamlVersion }, rootPath, schemaMapping);
 
     if (results && results.length > 0) {
         core.setFailed(`${results.length} file(s) failed validation`);
