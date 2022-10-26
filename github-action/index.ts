@@ -17,7 +17,9 @@ async function run() {
         console.log('Using schema mapping:', schemaMapping);
     }
 
-    let yamlVersion = core.getInput('yamlVersion') as YamlVersion;
+    let yamlVersionInput = core.getInput('yamlVersion');
+
+    let yamlVersion: YamlVersion | undefined = yamlVersionInput == '' ? undefined : (yamlVersionInput as YamlVersion);
     if (yamlVersion) {
         console.log('Using YAML specification version:', yamlVersion);
     }
