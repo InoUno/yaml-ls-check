@@ -39,7 +39,7 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@actions/core": "^1.5.0",
+    "@actions/core": "^1.10.0",
     "@types/glob": "^7.1.4",
     "@types/jest": "^27.0.2",
     "@types/node": "^16.9.4",
