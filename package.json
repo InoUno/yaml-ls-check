@@ -60,6 +60,6 @@
     "commander": "^8.2.0",
     "glob": "^7.1.7",
     "vscode-uri": "^3.0.2",
-    "yaml-language-server": "^1.7.0"
+    "yaml-language-server": "^1.11.0"
   }
 }

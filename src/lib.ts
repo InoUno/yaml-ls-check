@@ -9,7 +9,7 @@ import { TextDocument } from 'vscode-languageserver-textdocument';
 import { readJson } from './util';
 import { createSchemaRequestHandler } from './schema-handler';
 import { glob } from 'glob';
-import { TelemetryEvent } from 'yaml-language-server/lib/umd/languageserver/telemetry';
+import { TelemetryEvent } from 'yaml-language-server/lib/umd/languageservice/telemetry';
 import { YamlVersion } from 'yaml-language-server/lib/umd/languageservice/parser/yamlParser07';
 
 export class ConsoleTelemetry {
