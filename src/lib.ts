@@ -5,6 +5,7 @@ import { YAMLSchemaService } from 'yaml-language-server/lib/umd/languageservice/
 import { YAMLValidation } from 'yaml-language-server/lib/umd/languageservice/services/yamlValidation';
 import { WorkspaceContextService } from 'yaml-language-server/lib/umd/languageservice/yamlLanguageService';
 import { TextDocument } from 'vscode-languageserver-textdocument';
+import { Diagnostic } from 'vscode-languageserver-types';
 
 import { readJson } from './util';
 import { createSchemaRequestHandler } from './schema-handler';
@@ -53,13 +54,18 @@ function hasSchema(settings?: Settings): settings is SettingsWithSchema {
     return (settings as SettingsWithSchema)?.schema !== undefined;
 }
 
+interface FileValidationResult {
+    filePath: string;
+    error: Diagnostic[];
+}
+
 /**
  * Validates YAML files given with the specified settings.
  * @param files Paths to files to validate.
  * @param settings Settings defining how the files should be validated, and against which schemas.
  * @returns A list errors found in the files.
  */
-export async function getValidationResults(files: string[], settings?: Settings) {
+export async function getValidationResults(files: string[], settings?: Settings): Promise<FileValidationResult[]> {
     let workspaceContext: WorkspaceContextService | undefined;
     let schemaMapping: SchemaMapping = {};
     let rootPath: string | undefined;
