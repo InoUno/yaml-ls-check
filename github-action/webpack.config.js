@@ -11,12 +11,9 @@ module.exports = {
         test: /\.ts$/,
         use: 'ts-loader',
         exclude: /node_modules/,
-      },
-      {
-        test:/node_modules[\\|/](prettier|yaml-language-server|vscode-languageserver|vscode-json-languageservice)/,
-        use: 'umd-compat-loader'
-    }
+      }
     ],
+    noParse: /node_modules[\\|/](prettier|vscode-languageserver|vscode-json-languageservice)/
   },
   resolve: {
     extensions: [ '.ts', '.js' ],

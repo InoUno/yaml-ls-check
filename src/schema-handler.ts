@@ -3,7 +3,7 @@ import * as https from 'https';
 
 import { URI } from 'vscode-uri';
 
-import { isRelativePath } from 'yaml-language-server/lib/umd/languageservice/utils/paths';
+import { isRelativePath } from 'yaml-language-server/out/server/src/languageservice/utils/paths';
 import { SchemaRequestService } from 'yaml-language-server/lib/umd/languageservice/yamlLanguageService';
 import { trimStartChars, relativeToAbsolutePath } from './util';
 
