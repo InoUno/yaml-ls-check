@@ -11,7 +11,7 @@ outputs:
   invalidFiles:
     description: List of files which failed the validation.
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'github-action/dist/index.js'
 branding:
   color: green
