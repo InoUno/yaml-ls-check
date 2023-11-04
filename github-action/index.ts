@@ -27,6 +27,24 @@ async function run() {
     const results = await validateDirectory({ yamlVersion }, rootPath, schemaMapping);
 
     if (results && results.length > 0) {
+        for (const result of results) {
+            for (const error of result.error) {
+                core.error(
+                    `${result.filePath}:${error.range.start.line + 1}:${error.range.start.character + 1}: ${
+                        error.message
+                    }`,
+                    {
+                        title: error.message,
+                        file: result.filePath,
+                        startLine: error.range.start.line,
+                        endLine: error.range.end.line,
+                        startColumn: error.range.start.character,
+                        endColumn: error.range.end.character,
+                    },
+                );
+            }
+        }
+
         core.setFailed(`${results.length} file(s) failed validation`);
         core.setOutput(
             'invalidFiles',
