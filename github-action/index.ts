@@ -36,8 +36,8 @@ async function run() {
                     {
                         title: error.message,
                         file: result.filePath,
-                        startLine: error.range.start.line,
-                        endLine: error.range.end.line,
+                        startLine: error.range.start.line + 1,
+                        endLine: error.range.end.line + 1,
                         startColumn: error.range.start.character,
                         endColumn: error.range.end.character,
                     },
