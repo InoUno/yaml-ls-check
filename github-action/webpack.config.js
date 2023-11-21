@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
   entry: path.resolve(__dirname, 'index.ts'),
@@ -11,13 +12,17 @@ module.exports = {
         test: /\.ts$/,
         use: 'ts-loader',
         exclude: /node_modules/,
-      },
-      {
-        test:/node_modules[\\|/](prettier|yaml-language-server|vscode-languageserver|vscode-json-languageservice)/,
-        use: 'umd-compat-loader'
-    }
+      }
     ],
   },
+  plugins: [
+    new webpack.NormalModuleReplacementPlugin(
+      /\/umd\//,
+      function (resource) {
+        resource.request = resource.request.replace('/umd/', '/esm/');
+      }
+    ),
+  ],
   resolve: {
     extensions: [ '.ts', '.js' ],
   },

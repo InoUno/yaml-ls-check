@@ -1,6 +1,6 @@
 import * as core from '@actions/core';
 import * as path from 'path';
-import { YamlVersion } from 'yaml-language-server/lib/umd/languageservice/parser/yamlParser07';
+import { YamlVersion } from 'yaml-language-server/out/server/src/languageservice/parser/yamlParser07';
 import { SchemaMapping, validateDirectory } from '../src';
 
 async function run() {
