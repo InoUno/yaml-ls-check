@@ -36,20 +36,17 @@ async function run() {
         for (const result of results) {
             for (const error of result.error) {
                 const { diag, hover } = error;
-                const hoverMessage = (hover && MarkupContent.is(hover.contents)) ? `\n\n${marked(hover.contents.value)}` : ''
+                const hoverMessage =
+                    hover && MarkupContent.is(hover.contents) ? `\n\n${marked(hover.contents.value)}` : '';
 
-
-                core.error(
-                    diag.message + hoverMessage,
-                    {
-                        title: `${diag.message}${diag.source ? ' ' + diag.source + '.' : ''}`,
-                        file: result.filePath,
-                        startLine: diag.range.start.line + 1,
-                        endLine: diag.range.end.line + 1,
-                        startColumn: diag.range.start.character,
-                        endColumn: diag.range.end.character,
-                    },
-                );
+                core.error(diag.message + hoverMessage, {
+                    title: `${diag.message}${diag.source ? ' ' + diag.source + '.' : ''}`,
+                    file: result.filePath,
+                    startLine: diag.range.start.line + 1,
+                    endLine: diag.range.end.line + 1,
+                    startColumn: diag.range.start.character,
+                    endColumn: diag.range.end.character,
+                });
             }
         }
 

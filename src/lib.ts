@@ -60,7 +60,7 @@ interface FileValidationResult {
     error: {
         diag: Diagnostic;
         hover: Hover | null;
-    }[]
+    }[];
 }
 
 /**
@@ -122,7 +122,7 @@ export async function getValidationResults(files: string[], settings?: Settings)
         disableAdditionalProperties: false,
         customTags: [],
     });
-    const yamlHover = new YAMLHover(schemaService, telemetry)
+    const yamlHover = new YAMLHover(schemaService, telemetry);
 
     return await Promise.all(
         files.map(async (relativePath: string) => {
@@ -135,8 +135,8 @@ export async function getValidationResults(files: string[], settings?: Settings)
                 filePath,
                 error: diagnostics.map((diagnostics, index) => ({
                     diag: diagnostics,
-                    hover: hovers[index]
-                }))
+                    hover: hovers[index],
+                })),
             };
         }),
     ).then((rs) => rs.filter((r) => r.error.length > 0));
@@ -163,7 +163,9 @@ async function validateAndOutput(files: string[], settings: Settings) {
             const { diag, hover } = error;
             const sourceMessage = diag.source ? ` ${diag.source}` : '';
             console.error(
-                `${result.filePath}:${diag.range.start.line + 1}:${diag.range.start.character + 1}: ${diag.message}${sourceMessage}`,
+                `${result.filePath}:${diag.range.start.line + 1}:${diag.range.start.character + 1}: ${
+                    diag.message
+                }${sourceMessage}`,
             );
         }
     }
