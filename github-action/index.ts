@@ -2,8 +2,14 @@ import * as core from '@actions/core';
 import * as path from 'path';
 import { YamlVersion } from 'yaml-language-server/out/server/src/languageservice/parser/yamlParser07';
 import { SchemaMapping, validateDirectory } from '../src';
+import { MarkupContent } from 'vscode-languageserver-types';
+
+import { marked } from 'marked';
+import { markedTerminal } from 'marked-terminal';
 
 async function run() {
+    marked.use(markedTerminal() as any);
+
     let rootPath = process.env['GITHUB_WORKSPACE'] as string;
     let relativeToRoot = core.getInput('root', { trimWhitespace: true });
     if (relativeToRoot) {
@@ -29,17 +35,19 @@ async function run() {
     if (results && results.length > 0) {
         for (const result of results) {
             for (const error of result.error) {
+                const { diag, hover } = error;
+                const hoverMessage = (hover && MarkupContent.is(hover.contents)) ? `\n\n${marked(hover.contents.value)}` : ''
+
+
                 core.error(
-                    `${result.filePath}:${error.range.start.line + 1}:${error.range.start.character + 1}: ${
-                        error.message
-                    }`,
+                    diag.message + hoverMessage,
                     {
-                        title: error.message,
+                        title: `${diag.message}${diag.source ? ' ' + diag.source + '.' : ''}`,
                         file: result.filePath,
-                        startLine: error.range.start.line + 1,
-                        endLine: error.range.end.line + 1,
-                        startColumn: error.range.start.character,
-                        endColumn: error.range.end.character,
+                        startLine: diag.range.start.line + 1,
+                        endLine: diag.range.end.line + 1,
+                        startColumn: diag.range.start.character,
+                        endColumn: diag.range.end.character,
                     },
                 );
             }

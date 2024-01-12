@@ -3,9 +3,10 @@ import * as path from 'path';
 
 import { YAMLSchemaService } from 'yaml-language-server/out/server/src/languageservice/services/yamlSchemaService';
 import { YAMLValidation } from 'yaml-language-server/out/server/src/languageservice/services/yamlValidation';
+import { YAMLHover } from 'yaml-language-server/out/server/src/languageservice/services/yamlHover';
 import { WorkspaceContextService } from 'yaml-language-server/out/server/src/languageservice/yamlLanguageService';
 import { TextDocument } from 'vscode-languageserver-textdocument';
-import { Diagnostic } from 'vscode-languageserver-types';
+import { Diagnostic, Hover } from 'vscode-languageserver-types';
 
 import { readJson } from './util';
 import { createSchemaRequestHandler } from './schema-handler';
@@ -56,7 +57,10 @@ function hasSchema(settings?: Settings): settings is SettingsWithSchema {
 
 interface FileValidationResult {
     filePath: string;
-    error: Diagnostic[];
+    error: {
+        diag: Diagnostic;
+        hover: Hover | null;
+    }[]
 }
 
 /**
@@ -110,20 +114,30 @@ export async function getValidationResults(files: string[], settings?: Settings)
         schemaService.registerExternalSchema(uri, patterns);
     }
 
-    const yamlValidation = new YAMLValidation(schemaService, new ConsoleTelemetry() as any);
+    const telemetry = new ConsoleTelemetry();
+    const yamlValidation = new YAMLValidation(schemaService, telemetry);
     yamlValidation.configure({
         validate: true,
         yamlVersion: settings?.yamlVersion ?? '1.2',
         disableAdditionalProperties: false,
         customTags: [],
     });
+    const yamlHover = new YAMLHover(schemaService, telemetry)
 
     return await Promise.all(
         files.map(async (relativePath: string) => {
             const filePath = rootPath ? path.join(rootPath, relativePath) : relativePath;
             const doc = TextDocument.create(relativePath, 'yaml', 0, fs.readFileSync(filePath).toString());
 
-            return await yamlValidation.doValidation(doc).then((error) => ({ filePath, error }));
+            const diagnostics = await yamlValidation.doValidation(doc);
+            const hovers = await Promise.all(diagnostics.map((diag) => yamlHover.doHover(doc, diag.range.start)));
+            return {
+                filePath,
+                error: diagnostics.map((diagnostics, index) => ({
+                    diag: diagnostics,
+                    hover: hovers[index]
+                }))
+            };
         }),
     ).then((rs) => rs.filter((r) => r.error.length > 0));
 }
@@ -146,8 +160,10 @@ async function validateAndOutput(files: string[], settings: Settings) {
     console.error('Found invalid files:');
     for (const result of results) {
         for (const error of result.error) {
+            const { diag, hover } = error;
+            const sourceMessage = diag.source ? ` ${diag.source}` : '';
             console.error(
-                `${result.filePath}:${error.range.start.line + 1}:${error.range.start.character + 1}: ${error.message}`,
+                `${result.filePath}:${diag.range.start.line + 1}:${diag.range.start.character + 1}: ${diag.message}${sourceMessage}`,
             );
         }
     }
