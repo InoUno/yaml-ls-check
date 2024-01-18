@@ -37,7 +37,9 @@ async function run() {
             for (const error of result.error) {
                 const { diag, hover } = error;
                 const hoverMessage =
-                    hover && MarkupContent.is(hover.contents) ? `\n\n${marked(hover.contents.value)}` : '';
+                    hover && MarkupContent.is(hover.contents)
+                        ? `\n\n${marked(hover.contents.value, { gfm: false })}`
+                        : '';
 
                 core.error(diag.message + hoverMessage, {
                     title: `${diag.message}${diag.source ? ' ' + diag.source + '.' : ''}`,
