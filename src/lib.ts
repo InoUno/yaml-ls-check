@@ -182,7 +182,7 @@ async function validateAndOutput(files: string[], settings: Settings) {
 export async function validateDirectory(settings: BaseSettings, rootDir: string, schemaMapping?: SchemaMapping) {
     console.log(`Looking for YAML files to validate at: ${rootDir}`);
     const filePaths = await new Promise<string[]>((callback, error) => {
-        glob('**/*.{yml,yaml}', { cwd: rootDir, silent: true, nodir: true }, (err, files) => {
+        glob('**/*.{yml,yaml}', { cwd: rootDir, silent: true, nodir: true, dot: true }, (err, files) => {
             if (err) {
                 error(err);
             }
