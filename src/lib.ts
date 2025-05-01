@@ -160,7 +160,7 @@ async function validateAndOutput(files: string[], settings: Settings) {
     console.error('Found invalid files:');
     for (const result of results) {
         for (const error of result.error) {
-            const { diag, hover } = error;
+            const { diag } = error;
             const sourceMessage = diag.source ? ` ${diag.source}` : '';
             console.error(
                 `${result.filePath}:${diag.range.start.line + 1}:${diag.range.start.character + 1}: ${
@@ -181,14 +181,7 @@ async function validateAndOutput(files: string[], settings: Settings) {
  */
 export async function validateDirectory(settings: BaseSettings, rootDir: string, schemaMapping?: SchemaMapping) {
     console.log(`Looking for YAML files to validate at: ${rootDir}`);
-    const filePaths = await new Promise<string[]>((callback, error) => {
-        glob('**/*.{yml,yaml}', { cwd: rootDir, silent: true, nodir: true, dot: true }, (err, files) => {
-            if (err) {
-                error(err);
-            }
-            callback(files);
-        });
-    });
+    const filePaths = await glob('**/*.{yml,yaml}', { cwd: rootDir, nodir: true, dot: true });
 
     return validateAndOutput(filePaths, { ...settings, rootDir, schemaMapping });
 }
@@ -200,19 +193,9 @@ export async function validateDirectory(settings: BaseSettings, rootDir: string,
  * @returns A list errors found in the files.
  */
 export async function validateWithSchema(settings: BaseSettings, schema: string, ...patterns: string[]) {
-    const files = await Promise.all(
-        patterns.map(
-            (pattern) =>
-                new Promise<string[]>((callback, error) => {
-                    glob(pattern, { silent: true, nodir: true }, (err, files) => {
-                        if (err) {
-                            error(err);
-                        }
-                        callback(files);
-                    });
-                }),
-        ),
-    ).then((filesArrays) => filesArrays.flat());
+    const files = await Promise.all(patterns.map((pattern) => glob(pattern, { nodir: true }))).then((filesArrays) =>
+        filesArrays.flat(),
+    );
 
     return validateAndOutput(files, { ...settings, schema });
 }
