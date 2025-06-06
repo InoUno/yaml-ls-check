@@ -33,3 +33,15 @@ describe('schema mapping to files', () => {
         expect(invalidFiles.length).toBeGreaterThan(0);
     });
 });
+
+describe('embedded schema mapping inside file', () => {
+    it('valid file pass validation', async () => {
+        const invalidFiles = await getValidationResults(['valid-count-embedded.yml'], { rootDir: rootPath });
+        expect(invalidFiles.length).toBe(0);
+    });
+
+    it('invalid file do not pass validation', async () => {
+        const invalidFiles = await getValidationResults(['invalid-count-embedded.yml'], { rootDir: rootPath });
+        expect(invalidFiles.length).toBeGreaterThan(0);
+    });
+});

@@ -127,7 +127,8 @@ export async function getValidationResults(files: string[], settings?: Settings)
     return await Promise.all(
         files.map(async (relativePath: string) => {
             const filePath = rootPath ? path.join(rootPath, relativePath) : relativePath;
-            const doc = TextDocument.create(relativePath, 'yaml', 0, fs.readFileSync(filePath).toString());
+            const absolutePath = path.resolve(filePath);
+            const doc = TextDocument.create(absolutePath, 'yaml', 0, fs.readFileSync(filePath).toString());
 
             const diagnostics = await yamlValidation.doValidation(doc);
             const hovers = await Promise.all(diagnostics.map((diag) => yamlHover.doHover(doc, diag.range.start)));
